@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Cores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .titulo{
+            color: #CD5C5C;
+        }
+
+        .info {
+            text-align: center;
+            font-size: 14px;
+            color: #B22222;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .info span {
+            font-size: 18px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .color-box {
+            width: 111px;
+            height: 111px;
+            /* Borda removida */
+            border: none;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .color-box:hover {
+            transform: scale(1.05);
+        }
+
+        /* Código hexadecimal */
+        .color-hex {
+            padding: 8px 4px;
+            font-size: 13px;
+            font-family: monospace;
+            text-align: center;
+            color: #000000;
+            background-color: transparent;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            font-weight: normal;
+        }
+
+        .color-hex:hover {
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        .color-display {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        /* Nome da cor */
+        .color-name {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 13px;
+            color: #000000;
+            background-color: transparent;
+            padding: 4px;
+            margin: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: normal;
+        }
+
+        .color-name:hover {
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 15px;
+            color: #666;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        <span>🎨</span>
+        <span class="titulo">Tabela de Cores</span>
+    </h1>
+
+    <div class="info">
+        <span>💡</span>
+        <span>Clique no nome da cor ou no código hexadecimal para copiar</span>
+    </div>
+
+    <div class="container" id="container"></div>
+
+    <footer>
+        &copy; Todos os direitos reservados - 2026 - Donizete de Gouvea
+    </footer>
+
+    <script>
+        const cores = [
+            { nome: 'Indianred', hex: '#CD5C5C' },
+            { nome: 'Lightcoral', hex: '#F08080' },
+            { nome: 'Salmon', hex: '#FA8072' },
+            { nome: 'Darksalmon', hex: '#E9967A' },
+            { nome: 'Lightsalmon', hex: '#FFA07A' },
+            { nome: 'Crimson', hex: '#DC143C' },
+            { nome: 'Red', hex: '#FF0000' },
+            { nome: 'Firebrick', hex: '#B22222' },
+            { nome: 'Darkred', hex: '#8B0000' },
+            { nome: 'Cyan', hex: '#00FFFF' },
+            { nome: 'Lightcyan', hex: '#E0FFFF' },
+            { nome: 'Paleturquoise', hex: '#AFEEEE' },
+            { nome: 'Aquamarine', hex: '#7FFFD4' },
+            { nome: 'Turquoise', hex: '#40E0D0' },
+            { nome: 'Mediumturquoise', hex: '#48D1CC' },
+            { nome: 'Darkturquoise', hex: '#00CED1' },
+            { nome: 'Cadetblue', hex: '#5F9EA0' },
+            { nome: 'Steelblue', hex: '#4682B4' },
+            { nome: 'Lightsteelblue', hex: '#B0C4DE' },
+            { nome: 'Powderblue', hex: '#B0E0E6' },
+            { nome: 'Lightblue', hex: '#ADD8E6' },
+            { nome: 'Skyblue', hex: '#87CEEB' },
+            { nome: 'Lightskyblue', hex: '#87CEFA' },
+            { nome: 'Deepskyblue', hex: '#00BFFF' },
+            { nome: 'Dodgerblue', hex: '#1E90FF' },
+            { nome: 'Cornflowerblue', hex: '#6495ED' },
+            { nome: 'Mediumslateblue', hex: '#7B68EE' },
+            { nome: 'Royalblue', hex: '#4169E1' },
+            { nome: 'Blue', hex: '#0000FF' },
+            { nome: 'Mediumblue', hex: '#0000CD' },
+            { nome: 'Darkblue', hex: '#00008B' },
+            { nome: 'Navy', hex: '#000080' },
+            { nome: 'Midnightblue', hex: '#191970' },
+            { nome: 'Greenyellow', hex: '#ADFF2F' },
+            { nome: 'Chartreuse', hex: '#7FFF00' },
+            { nome: 'Lawngreen', hex: '#7CFC00' },
+            { nome: 'Lime', hex: '#00FF00' },
+            { nome: 'Limegreen', hex: '#32CD32' },
+            { nome: 'Palegreen', hex: '#98FB98' },
+            { nome: 'Lightgreen', hex: '#90EE90' },
+            { nome: 'Mediumspringgreen', hex: '#00FA9A' },
+            { nome: 'Springgreen', hex: '#00FF7F' },
+            { nome: 'Mediumseagreen', hex: '#3CB371' },
+            { nome: 'Seagreen', hex: '#2E8B57' },
+            { nome: 'Forestgreen', hex: '#228B22' },
+            { nome: 'Green', hex: '#008000' },
+            { nome: 'Darkgreen', hex: '#006400' },
+            { nome: 'Yellowgreen', hex: '#9ACD32' },
+            { nome: 'Olivedrab', hex: '#6B8E23' },
+            { nome: 'Olive', hex: '#808000' },
+            { nome: 'Darkolivegreen', hex: '#556B2F' },
+            { nome: 'Mediumaquamarine', hex: '#66CDAA' },
+            { nome: 'Darkseagreen', hex: '#8FBC8F' },
+            { nome: 'Lightseagreen', hex: '#20B2AA' },
+            { nome: 'Darkcyan', hex: '#008B8B' },
+            { nome: 'Teal', hex: '#008080' },
+            { nome: 'Pink', hex: '#FFC0CB' },
+            { nome: 'Lightpink', hex: '#FFB6C1' },
+            { nome: 'Hotpink', hex: '#FF69B4' },
+            { nome: 'Deeppink', hex: '#FF1493' },
+            { nome: 'Mediumvioletred', hex: '#C71585' },
+            { nome: 'Palevioletred', hex: '#DB7093' },
+            { nome: 'Cornsilk', hex: '#FFF8DC' },
+            { nome: 'Blanchedalmond', hex: '#FFEBCD' },
+            { nome: 'Bisque', hex: '#FFE4C4' },
+            { nome: 'Navajowhite', hex: '#FFDEAD' },
+            { nome: 'Wheat', hex: '#F5DEB3' },
+            { nome: 'Burlywood', hex: '#DEB887' },
+            { nome: 'Tan', hex: '#D2B48C' },
+            { nome: 'Rosybrown', hex: '#BC8F8F' },
+            { nome: 'Sandybrown', hex: '#F4A460' },
+            { nome: 'Goldenrod', hex: '#DAA520' },
+            { nome: 'Darkgoldenrod', hex: '#B8860B' },
+            { nome: 'Peru', hex: '#CD853F' },
+            { nome: 'Chocolate', hex: '#D2691E' },
+            { nome: 'Saddlebrown', hex: '#8B4513' },
+            { nome: 'Sienna', hex: '#A0522D' },
+            { nome: 'Brown', hex: '#A52A2A' },
+            { nome: 'Maroon', hex: '#800000' },
+            { nome: 'Lightsalmon', hex: '#FFA07A' },
+            { nome: 'Coral', hex: '#FF7F50' },
+            { nome: 'Tomato', hex: '#FF6347' },
+            { nome: 'Orangered', hex: '#FF4500' },
+            { nome: 'Darkorange', hex: '#FF8C00' },
+            { nome: 'Orange', hex: '#FFA500' },
+            { nome: 'Gold', hex: '#FFD700' },
+            { nome: 'Amber', hex: '#FFBF00' },
+            { nome: 'Yellow', hex: '#FFFF00' },
+            { nome: 'Lightyellow', hex: '#FFFFE0' },
+            { nome: 'Lightgoldenrodyellow', hex: '#FAFAD2' },
+            { nome: 'Lemonchiffon', hex: '#FFFACD' },
+            { nome: 'Papayawhip', hex: '#FFEFD5' },
+            { nome: 'Moccasin', hex: '#FFE4B5' },
+            { nome: 'Peachpuff', hex: '#FFDAB9' },
+            { nome: 'Palegoldenrod', hex: '#EEE8AA' },
+            { nome: 'Khaki', hex: '#F0E68C' },
+            { nome: 'Darkkhaki', hex: '#BDB76B' },
+            { nome: 'Lavender', hex: '#E6E6FA' },
+            { nome: 'Thistle', hex: '#D8BFD8' },
+            { nome: 'Plum', hex: '#DDA0DD' },
+            { nome: 'Violet', hex: '#EE82EE' },
+            { nome: 'Orchid', hex: '#DA70D6' },
+            { nome: 'Fuchsia', hex: '#FF00FF' },
+            { nome: 'Magenta', hex: '#FF00FF' },
+            { nome: 'Mediumorchid', hex: '#BA55D3' },
+            { nome: 'Mediumpurple', hex: '#9370DB' },
+            { nome: 'Blueviolet', hex: '#8A2BE2' },
+            { nome: 'Darkviolet', hex: '#9400D3' },
+            { nome: 'Darkorchid', hex: '#9932CC' },
+            { nome: 'Darkmagenta', hex: '#8B008B' },
+            { nome: 'Purple', hex: '#800080' },
+            { nome: 'Indigo', hex: '#4B0082' },
+            { nome: 'Slateblue', hex: '#6A5ACD' },
+            { nome: 'Darkslateblue', hex: '#483D8B' },
+            { nome: 'Gainsboro', hex: '#DCDCDC' },
+            { nome: 'Lightgrey', hex: '#D3D3D3' },
+            { nome: 'Silver', hex: '#C0C0C0' },
+            { nome: 'Darkgray', hex: '#A9A9A9' },
+            { nome: 'Gray', hex: '#808080' },
+            { nome: 'Dimgray', hex: '#696969' },
+            { nome: 'Lightslategray', hex: '#778899' },
+            { nome: 'Slategray', hex: '#708090' },
+            { nome: 'Darkslategray', hex: '#2F4F4F' },
+            { nome: 'Black', hex: '#000000' },
+            { nome: 'White', hex: '#FFFFFF' },
+            { nome: 'Snow', hex: '#FFFAFA' },
+            { nome: 'Honeydew', hex: '#F0FFF0' },
+            { nome: 'Mintcream', hex: '#F5FFFA' },
+            { nome: 'Azure', hex: '#F0FFFF' },
+            { nome: 'Aliceblue', hex: '#F0F8FF' },
+            { nome: 'Ghostwhite', hex: '#F8F8FF' },
+            { nome: 'Whitesmoke', hex: '#F5F5F5' },
+            { nome: 'Seashell', hex: '#FFF5EE' },
+            { nome: 'Beige', hex: '#F5F5DC' },
+            { nome: 'Oldlace', hex: '#FDF5E6' },
+            { nome: 'Floralwhite', hex: '#FFFAF0' },
+            { nome: 'Ivory', hex: '#FFFFF0' },
+            { nome: 'Antiquewhite', hex: '#FAEBD7' },
+            { nome: 'Linen', hex: '#FAF0E6' },
+            { nome: 'Lavenderblush', hex: '#FFF0F5' },
+            { nome: 'Mistyrose', hex: '#FFE4E1' }
+        ];
+
+        const container = document.getElementById('container');
+
+        cores.forEach(cor => {
+            const colorBox = document.createElement('div');
+            colorBox.className = 'color-box';
+            colorBox.style.backgroundColor = cor.hex;
+
+            const isBlack = cor.hex.toUpperCase() === '#000000';
+            const textColor = isBlack ? '#FFFFFF' : '#000000';
+
+            const colorDisplay = document.createElement('div');
+            colorDisplay.className = 'color-display';
+            colorDisplay.addEventListener('click', () => copiar(cor.hex));
+
+            const colorHex = document.createElement('div');
+            colorHex.className = 'color-hex';
+            colorHex.textContent = cor.hex;
+            colorHex.style.color = textColor;
+            colorHex.addEventListener('click', () => copiar(cor.hex));
+
+            const colorName = document.createElement('div');
+            colorName.className = 'color-name';
+            colorName.textContent = cor.nome;
+            colorName.style.color = textColor;
+            colorName.addEventListener('click', () => copiar(cor.nome));
+
+            colorBox.appendChild(colorHex);
+            colorBox.appendChild(colorDisplay);
+            colorBox.appendChild(colorName);
+
+            container.appendChild(colorBox);
+        });
+
+        function copiar(texto) {
+            navigator.clipboard.writeText(texto).then(() => {
+                const alertBox = document.createElement('div');
+                alertBox.style.position = 'fixed';
+                alertBox.style.top = '20px';
+                alertBox.style.left = '50%';
+                alertBox.style.transform = 'translateX(-50%)';
+                alertBox.style.backgroundColor = '#333';
+                alertBox.style.color = '#fff';
+                alertBox.style.padding = '12px 20px';
+                alertBox.style.borderRadius = '6px';
+                alertBox.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                alertBox.style.zIndex = '1000';
+                alertBox.style.fontFamily = 'Arial, sans-serif';
+                alertBox.style.fontSize = '14px';
+                alertBox.textContent = `Copiado: ${texto}`;
+
+                document.body.appendChild(alertBox);
+
+                setTimeout(() => {
+                    alertBox.style.opacity = '0';
+                    alertBox.style.transition = 'opacity 0.3s';
+                    setTimeout(() => {
+                        alertBox.remove();
+                    }, 300);
+                }, 1000);
+            });
+        }
+    </script>
+</body>
+
+</html>
